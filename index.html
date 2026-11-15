@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEVERSE X | Created by Oneth Rathsara</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pureBlack: '#030303',
+                        deepNavy: '#080D1A',
+                        electricBlue: '#00A8FF',
+                        neonCyan: '#00F5FF',
+                        purpleCustom: '#8B5CF6',
+                        redCustom: '#FF1744',
+                        goldCustom: '#FFD700',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons & Google Fonts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #030303;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(8, 13, 26, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 245, 255, 0.15);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.25);
+        }
+        .glow-blue {
+            box-shadow: 0 0 25px rgba(0, 168, 255, 0.25);
+        }
+        .glow-purple {
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.25);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030303;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #080D1A;
+            border-radius: 3px;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F5FF;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; filter: drop-shadow(0 0 15px #00F5FF); }
+        }
+        .animate-glow {
+            animation: pulseGlow 3s infinite;
+        }
+    </style>
+</head>
+<body class="bg-pureBlack text-white antialiased selection:bg-neonCyan selection:text-pureBlack">
+
+    <!-- BACKGROUND PARTICLES & AMBIENT GLOW -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-electricBlue/10 rounded-full blur-[120px]"></div>
+        <div class="absolute top-1/3 -right-40 w-96 h-96 bg-purpleCustom/10 rounded-full blur-[140px]"></div>
+        <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-neonCyan/10 rounded-full blur-[140px]"></div>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-neonCyan/20 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo & Creator -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-electricBlue to-neonCyan flex items-center justify-center glow-cyan">
+                    <i data-lucide="play" class="w-5 h-5 text-pureBlack fill-pureBlack"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-neonCyan via-electricBlue to-white bg-clip-text text-transparent">CINEVERSE X</span>
+                    <p class="text-[10px] text-neonCyan/70 tracking-widest uppercase font-semibold">Created by Oneth Rathsara</p>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <button onclick="app.switchTab('home')" class="nav-link text-neonCyan transition hover:text-neonCyan flex items-center gap-1.5" data-target="home">
+                    <i data-lucide="film" class="w-4 h-4"></i> Home
+                </button>
+                <button onclick="app.switchTab('search')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="search">
+                    <i data-lucide="search" class="w-4 h-4"></i> TMDB Search
+                </button>
+                <button onclick="app.switchTab('ai')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="ai">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i> CINE AI
+                </button>
+                <button onclick="app.switchTab('sources')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="sources">
+                    <i data-lucide="globe" class="w-4 h-4 text-electricBlue"></i> Movie Hubs
+                </button>
+                <button onclick="app.switchTab('profile')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="profile">
+                    <i data-lucide="user-check" class="w-4 h-4 text-neonCyan"></i> Profile
+                </button>
+                <button onclick="app.switchTab('watchlist')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="watchlist">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i> Watchlist
+                </button>
+                <button onclick="app.switchTab('vip')" class="nav-link text-gray-300 hover:text-goldCustom transition flex items-center gap-1.5" data-target="vip">
+                    <i data-lucide="crown" class="w-4 h-4 text-goldCustom"></i> VIP
+                </button>
+                <button onclick="app.switchTab('admin')" class="nav-link text-gray-300 hover:text-purpleCustom transition flex items-center gap-1.5" data-target="admin">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i> Admin
+                </button>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="flex items-center space-x-4">
+                <button onclick="app.toggleLang()" class="px-2.5 py-1 rounded-lg border border-neonCyan/30 text-xs font-semibold hover:bg-neonCyan/10 transition">
+                    <span id="lang-label">EN / සිංහල</span>
+                </button>
+                <button onclick="app.openAuthModal()" class="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold text-sm hover:glow-cyan transition">
+                    <i data-lucide="user" class="w-4 h-4"></i> <span id="auth-btn-text">Sign In</span>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button onclick="app.toggleMobileMenu()" class="md:hidden p-2 text-neonCyan">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU MODAL -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-pureBlack/95 backdrop-blur-2xl flex flex-col justify-center items-center space-y-5 hidden md:hidden">
+        <button onclick="app.toggleMobileMenu()" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-white">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <button onclick="app.switchTab('home'); app.toggleMobileMenu();" class="text-lg font-bold hover:text-neonCyan">Home</button>
+        <button onclick="app.switchTab('search'); app.toggleMobileMenu();" class="text-lg font-bold hover:text-neonCyan">TMDB Search</button>
+        <button onclick="app.switchTab('ai'); app.toggleMobileMenu();" class="text-lg font-bold text-neonCyan">CINE AI Assistant</button>
+        <button onclick="app.switchTab('sources'); app.toggleMobileMenu();" class="text-lg font-bold text-electricBlue">Movie Hubs (LK Subz)</button>
+        <button onclick="app.switchTab('profile'); app.toggleMobileMenu();" class="text-lg font-bold text-neonCyan">Developer Profile</button>
+        <button onclick="app.switchTab('watchlist'); app.toggleMobileMenu();" class="text-lg font-bold hover:text-neonCyan">Watchlist</button>
+        <button onclick="app.switchTab('vip'); app.toggleMobileMenu();" class="text-lg font-bold text-goldCustom">VIP Membership</button>
+        <button onclick="app.switchTab('admin'); app.toggleMobileMenu();" class="text-lg font-bold text-purpleCustom">Admin Dashboard</button>
+        <button onclick="app.openAuthModal(); app.toggleMobileMenu();" class="px-6 py-2.5 rounded-xl bg-neonCyan text-pureBlack font-bold text-sm">Sign In / Register</button>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="relative z-10 pt-20 pb-24">
+
+        <!-- ================= TAB 1: HOME ================= -->
+        <section id="tab-home" class="tab-content space-y-12">
+            <!-- Hero Spotlight Section -->
+            <div id="hero-section" class="relative min-h-[85vh] flex items-center justify-center px-4 sm:px-8 overflow-hidden">
+                <div class="absolute inset-0 z-0">
+                    <img id="hero-bg" src="https://image.tmdb.org/t/p/original/bKxiLgSV4YIs6XW58bN60r1bUaE.jpg" class="w-full h-full object-cover filter brightness-50 scale-105 transition-all duration-1000" alt="Hero Backdrop">
+                    <div class="absolute inset-0 bg-gradient-to-t from-pureBlack via-pureBlack/50 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-pureBlack via-transparent to-pureBlack"></div>
+                </div>
+                <div class="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-12">
+                    <div class="space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonCyan/10 border border-neonCyan/40 text-neonCyan text-xs font-semibold uppercase tracking-wider glow-cyan">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> #1 Sinhala Subtitle Hub Portal
+                        </div>
+                        <h1 id="hero-title" class="text-4xl sm:text-6xl font-black tracking-tight text-white drop-shadow-lg">CINEVERSE X</h1>
+                        <p id="hero-overview" class="text-gray-300 text-sm sm:text-base line-clamp-3 leading-relaxed max-w-xl">
+                            Explore thousands of movies and TV series with Sinhala subtitles powered by top Sri Lankan movie download hubs.
+                        </p>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="flex items-center gap-1 text-goldCustom font-bold"><i data-lucide="star" class="w-4 h-4 fill-goldCustom"></i> <span id="hero-rating">8.5</span>/10</span>
+                            <span class="text-gray-400">|</span>
+                            <span id="hero-year" class="text-gray-300">2026</span>
+                            <span class="text-gray-400">|</span>
+                            <span class="px-2 py-0.5 rounded bg-electricBlue/20 text-electricBlue text-xs font-semibold">Sinhala Sub Hubs</span>
+                        </div>
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <button onclick="app.switchTab('search')" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold flex items-center gap-2 hover:glow-cyan transition">
+                                <i data-lucide="search" class="w-5 h-5"></i> Search TMDB Movies
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Category Carousels -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                <!-- Trending Section -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-neonCyan"></i> Trending Movies Today
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="trending-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Popular Movies -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="flame" class="w-6 h-6 text-redCustom"></i> Popular Worldwide
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="popular-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Top Rated Movies -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="star" class="w-6 h-6 text-goldCustom"></i> Top Rated Masterpieces
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="top-rated-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Anime & Animation -->
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                            <i data-lucide="sparkles" class="w-6 h-6 text-electricBlue"></i> Anime & Animation
+                        </h2>
+                        <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                    </div>
+                    <div id="anime-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: TMDB SEARCH & EXPLORE (1 to 100 Animation) ================= -->
+        <section id="tab-search" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="space-y-4">
+                <h1 class="text-3xl font-black bg-gradient-to-r from-neonCyan to-white bg-clip-text text-transparent">TMDB Movie Search & 1-100 Loader</h1>
+                <p class="text-gray-400 text-sm">Search through TMDB database with dynamic 1% to 100% progress loading animation.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="absolute left-4 top-3.5 w-5 h-5 text-neonCyan"></i>
+                        <input type="text" id="cinesubz-search-input" onkeydown="if(event.key==='Enter')app.searchTMDBAPI(1, false)" placeholder="Type movie name (e.g., Avatar, Spider-Man)..." class="w-full pl-12 pr-4 py-3.5 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-400 focus:outline-none focus:border-neonCyan transition">
+                    </div>
+                    <button onclick="app.searchTMDBAPI(1, false)" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold hover:glow-cyan transition flex items-center justify-center gap-2">
+                        <i data-lucide="search" class="w-5 h-5"></i> Search
+                    </button>
+                </div>
+            </div>
+            <div id="cinesubz-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <div class="col-span-full text-center py-16 text-gray-400">Type a keyword above and click Search to fetch movies.</div>
+            </div>
+            <!-- Load More Button Container -->
+            <div id="load-more-container" class="text-center pt-6 hidden">
+                <button onclick="app.loadMoreSearchResults()" class="px-8 py-3.5 rounded-xl glass-panel border border-neonCyan text-neonCyan font-bold hover:bg-neonCyan/10 transition flex items-center gap-2 mx-auto">
+                    <i data-lucide="plus-circle" class="w-5 h-5"></i> Load More Movies
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: CINE AI ASSISTANT ================= -->
+        <section id="tab-ai" class="tab-content max-w-4xl mx-auto px-4 hidden">
+            <div class="glass-panel rounded-3xl border border-neonCyan/30 overflow-hidden flex flex-col h-[75vh] glow-cyan">
+                <!-- AI Header -->
+                <div class="p-6 border-b border-neonCyan/20 flex items-center justify-between bg-pureBlack/40">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-electricBlue to-neonCyan flex items-center justify-center animate-glow">
+                            <i data-lucide="sparkles" class="w-5 h-5 text-pureBlack"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-bold text-neonCyan">CINE AI Assistant</h2>
+                            <p class="text-xs text-gray-400">Futuristic Movie Recommendation & Discovery Brain</p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-neonCyan/10 text-neonCyan text-xs font-semibold">Online</span>
+                </div>
+                <!-- Chat Messages Area -->
+                <div id="ai-chat-box" class="flex-1 p-6 overflow-y-auto space-y-4">
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 rounded-lg bg-neonCyan/20 flex items-center justify-center shrink-0">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i>
+                        </div>
+                        <div class="p-4 rounded-2xl glass-panel max-w-lg text-sm text-gray-200 border border-neonCyan/20">
+                            Hello! I am **CINE AI**, created by Oneth Rathsara. Tell me your mood or favorite movie genre, and I will recommend the best titles for you!
+                        </div>
+                    </div>
+                </div>
+                <!-- AI Quick Prompts -->
+                <div class="px-6 py-2 flex gap-2 overflow-x-auto hide-scrollbar">
+                    <button onclick="app.sendAiPrompt('Recommend a mind-bending sci-fi movie')" class="px-3 py-1.5 rounded-xl border border-neonCyan/30 text-xs text-neonCyan hover:bg-neonCyan/10 whitespace-nowrap">🌌 Mind-bending Sci-Fi</button>
+                    <button onclick="app.sendAiPrompt('Give me a high-octane action thriller')" class="px-3 py-1.5 rounded-xl border border-neonCyan/30 text-xs text-neonCyan hover:bg-neonCyan/10 whitespace-nowrap">🔥 Action Thriller</button>
+                </div>
+                <!-- AI Input Box -->
+                <div class="p-4 border-t border-neonCyan/20 bg-pureBlack/60 flex items-center space-x-3">
+                    <input type="text" id="ai-input" onkeydown="if(event.key==='Enter')app.handleAiSubmit()" placeholder="Ask CINE AI anything..." class="flex-1 px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-500 focus:outline-none focus:border-neonCyan text-sm">
+                    <button onclick="app.handleAiSubmit()" class="p-3 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold hover:glow-cyan transition">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: MOVIE HUBS & SITES ================= -->
+        <section id="tab-sources" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <h1 class="text-3xl sm:text-4xl font-black bg-gradient-to-r from-electricBlue to-neonCyan bg-clip-text text-transparent">Connected Movie Download Hubs</h1>
+                <p class="text-gray-400 text-sm">Access top Sri Lankan Sinhala subtitle & movie download platforms instantly.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div onclick="window.open('https://cinesubz.co', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="download" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Cinesubz</h3>
+                    <p class="text-xs text-gray-400">Sinhala Subtitled Movies & Series</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://cineru.lk', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="clapperboard" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Cineru LK</h3>
+                    <p class="text-xs text-gray-400">Sinhala Subtitle Hub</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://www.lksubs.com/', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="film" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">LKSubs</h3>
+                    <p class="text-xs text-gray-400">Sinhala Subtitle Portal</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://pupilvideo.blogspot.com/', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="video" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Pupil Video</h3>
+                    <p class="text-xs text-gray-400">Sinhala Sub Movies & Series</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://www.dinkamovieslk.app/?m=', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="tv" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Dinka Movies LK</h3>
+                    <p class="text-xs text-gray-400">Movie Streaming & Subtitles</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://baiscopewatch.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="globe" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Baiscope Watch</h3>
+                    <p class="text-xs text-gray-400">Sinhala Subtitles & Reviews</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://piratelk.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="shield" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Pirate LK</h3>
+                    <p class="text-xs text-gray-400">Movies & Series Hub</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://subzlk.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="play-circle" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Subz LK</h3>
+                    <p class="text-xs text-gray-400">Sinhala Subtitles Portal</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://dublk.com', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="mic" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Dub LK</h3>
+                    <p class="text-xs text-gray-400">Sinhala Dubbed Movies</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+                <div onclick="window.open('https://sinhalasub.lk', '_blank')" class="glass-panel p-6 rounded-2xl border border-neonCyan/35 hover:border-neonCyan cursor-pointer group transition duration-300 hover:scale-105 space-y-3">
+                    <div class="w-12 h-12 rounded-xl bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition"><i data-lucide="file-text" class="w-6 h-6"></i></div>
+                    <h3 class="text-lg font-bold text-white">Sinhala Sub LK</h3>
+                    <p class="text-xs text-gray-400">Sinhala Subtitle Downloads</p>
+                    <span class="inline-flex items-center gap-1 text-xs text-neonCyan font-semibold">Visit Portal <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB: DEVELOPER PROFILE & OTHER WEBSITES ================= -->
+        <section id="tab-profile" class="tab-content max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="glass-panel p-8 sm:p-10 rounded-3xl border border-neonCyan/40 glow-cyan space-y-8">
+                <!-- Profile Header -->
+                <div class="flex flex-col sm:flex-row items-center gap-6 border-b border-neonCyan/20 pb-8">
+                    <div class="w-28 h-28 rounded-2xl bg-gradient-to-br from-electricBlue to-neonCyan flex items-center justify-center text-pureBlack font-black text-4xl glow-cyan">
+                        OR
+                    </div>
+                    <div class="text-center sm:text-left space-y-2">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonCyan/10 border border-neonCyan/30 text-neonCyan text-xs font-bold uppercase tracking-wider">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Verified Developer
+                        </div>
+                        <h1 class="text-3xl sm:text-4xl font-black text-white">Oneth Rathsara</h1>
+                        <p class="text-neonCyan font-semibold text-sm">Full-Stack Web Developer & Creative UI Engineer</p>
+                        <p class="text-gray-400 text-xs">Based in Sri Lanka | St. Sylvester's College (ශාන්ත සිල්වෙස්තර පිරිමි විද්‍යාලය)</p>
+                    </div>
+                </div>
+
+                <!-- Bio & Details Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-2xl glass-panel border border-neonCyan/20 space-y-3">
+                        <h3 class="text-lg font-bold text-neonCyan flex items-center gap-2"><i data-lucide="code" class="w-5 h-5"></i> Developer Bio</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Passionate self-taught full-stack web developer and commerce student specializing in cyberpunk aesthetics, dark void black and neon electric blue UI designs, glassmorphic panels, and interactive web applications. Experienced in building high-performance movie portals, cricket dashboards (Cricverse), and automated multi-device WhatsApp bots using Node.js, Express, and Baileys frameworks.
+                        </p>
+                    </div>
+                    <div class="p-6 rounded-2xl glass-panel border border-neonCyan/20 space-y-3">
+                        <h3 class="text-lg font-bold text-electricBlue flex items-center gap-2"><i data-lucide="globe" class="w-5 h-5"></i> Other Websites & Projects</h3>
+                        <p class="text-gray-400 text-xs">Explore my other live web applications and developer platforms:</p>
+                        <div class="space-y-3 pt-2">
+                            <a href="https://Cricversexyz.vercel.app" target="_blank" class="flex items-center justify-between p-3.5 rounded-xl bg-pureBlack/50 border border-electricBlue/30 hover:border-electricBlue transition group">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-electricBlue/20 flex items-center justify-center text-electricBlue"><i data-lucide="zap" class="w-4 h-4"></i></div>
+                                    <div>
+                                        <span class="text-sm font-bold text-white group-hover:text-electricBlue block">Cricverse (Vercel)</span>
+                                        <span class="text-[10px] text-gray-400">Cricversexyz.vercel.app</span>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-electricBlue font-semibold flex items-center gap-1">Visit <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                            </a>
+                            <a href="https://Cricverse-xyz.netlify.app/" target="_blank" class="flex items-center justify-between p-3.5 rounded-xl bg-pureBlack/50 border border-neonCyan/30 hover:border-neonCyan transition group">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-neonCyan/20 flex items-center justify-center text-neonCyan"><i data-lucide="cloud" class="w-4 h-4"></i></div>
+                                    <div>
+                                        <span class="text-sm font-bold text-white group-hover:text-neonCyan block">Cricverse (Netlify)</span>
+                                        <span class="text-[10px] text-gray-400">Cricverse-xyz.netlify.app</span>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-neonCyan font-semibold flex items-center gap-1">Visit <i data-lucide="external-link" class="w-3.5 h-3.5"></i></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 5: WATCHLIST ================= -->
+        <section id="tab-watchlist" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 hidden">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-black bg-gradient-to-r from-neonCyan to-white bg-clip-text text-transparent">My Personal Watchlist</h1>
+                    <p class="text-gray-400 text-sm mt-1">Saved movies synchronized securely with your account.</p>
+                </div>
+                <button onclick="app.clearWatchlist()" class="px-4 py-2 rounded-xl border border-redCustom/40 text-redCustom text-xs font-bold hover:bg-redCustom/10 transition">Clear All</button>
+            </div>
+            <div id="watchlist-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <!-- Watchlist items -->
+            </div>
+        </section>
+
+        <!-- ================= TAB 6: VIP MEMBERSHIP ================= -->
+        <section id="tab-vip" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 hidden">
+            <div class="text-center max-w-2xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-goldCustom/10 border border-goldCustom/40 text-goldCustom text-xs font-bold uppercase tracking-wider glow-purple">
+                    <i data-lucide="crown" class="w-4 h-4"></i> CINEVERSE X VIP CLUB
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-black text-white">Unlock Ultimate Cinematic Power</h1>
+                <p class="text-gray-400 text-sm sm:text-base">Experience 4K HDR streaming, zero ads, and custom neon themes crafted by Oneth Rathsara.</p>
+            </div>
+        </section>
+
+        <!-- ================= TAB 7: ADMIN DASHBOARD ================= -->
+        <section id="tab-admin" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-black bg-gradient-to-r from-purpleCustom to-neonCyan bg-clip-text text-transparent">Admin Control Dashboard</h1>
+                    <p class="text-gray-400 text-sm mt-1">Platform telemetry and TMDB API status.</p>
+                </div>
+                <span class="px-3 py-1.5 rounded-lg glass-panel text-xs font-semibold text-purpleCustom border border-purpleCustom/40">API Status: Connected (TMDB)</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= DOWNLOAD HUBS MODAL (Cinesubz & Cineru at Top) ================= -->
+    <div id="download-modal" class="fixed inset-0 z-50 bg-pureBlack/90 backdrop-blur-2xl flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="glass-panel max-w-2xl w-full rounded-3xl border border-neonCyan/40 p-6 sm:p-8 space-y-6 relative glow-cyan max-h-[90vh] overflow-y-auto">
+            <button onclick="app.closeDownloadSelector()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="space-y-2 text-center">
+                <h3 id="modal-movie-title" class="text-2xl font-black text-neonCyan">Movie Download Hubs</h3>
+                <p class="text-xs text-gray-400">Select any Sri Lankan subtitle platform to search this movie instantly.</p>
+            </div>
+            <div id="cinesubz-download-container" class="space-y-3">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= AUTH MODAL ================= -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-pureBlack/90 backdrop-blur-2xl flex items-center justify-center p-4 hidden">
+        <div class="glass-panel max-w-md w-full rounded-3xl border border-neonCyan/40 p-8 space-y-6 relative glow-cyan">
+            <button onclick="app.closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-black bg-gradient-to-r from-neonCyan to-white bg-clip-text text-transparent">Welcome to CINEVERSE X</h2>
+                <p class="text-xs text-gray-400">Secure Authentication Portal</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs text-gray-400 font-medium">Email Address</label>
+                    <input type="email" id="auth-email" placeholder="name@domain.com" class="w-full mt-1 px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-600 focus:outline-none focus:border-neonCyan text-sm">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 font-medium">Password</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full mt-1 px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-600 focus:outline-none focus:border-neonCyan text-sm">
+                </div>
+                <button onclick="app.handleAuth()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold text-sm hover:glow-cyan transition">
+                    Sign In / Register
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-neonCyan/20 py-12 text-center text-xs text-gray-500 space-y-4 relative z-10">
+        <div class="flex items-center justify-center space-x-2">
+            <div class="w-6 h-6 rounded-lg bg-neonCyan flex items-center justify-center">
+                <i data-lucide="play" class="w-3 h-3 text-pureBlack fill-pureBlack"></i>
+            </div>
+            <span class="text-white font-bold tracking-wider">CINEVERSE X</span>
+        </div>
+        <p>Created with passion by <span class="text-neonCyan font-semibold">Oneth Rathsara</span>. Powered by TMDB & LK Movie Hubs.</p>
+        <p>© 2026 CINEVERSE X. All rights reserved.</p>
+    </footer>
+
+    <!-- ================= APPLICATION LOGIC (JAVASCRIPT) ================= -->
+    <script>
+        const TMDB_API_KEY = '8265bd1679663a7ea12ac168da84d2e8';
+        const TMDB_BASE = 'https://api.themoviedb.org/3';
+
+        class CineverseApp {
+            constructor() {
+                this.currentTab = 'home';
+                this.watchlist = JSON.parse(localStorage.getItem('cineverse_watchlist')) || [];
+                this.user = JSON.parse(localStorage.getItem('cineverse_user')) || null;
+                this.searchQuery = '';
+                this.searchPage = 1;
+                this.searchResultsCache = [];
+                this.init();
+            }
+
+            async init() {
+                lucide.createIcons();
+                this.updateAuthUI();
+                await this.loadHomeData();
+                this.renderWatchlist();
+            }
+
+            switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+                
+                document.querySelectorAll('.nav-link').forEach(el => {
+                    el.classList.remove('text-neonCyan');
+                    el.classList.add('text-gray-300');
+                    if(el.getAttribute('data-target') === tabId) {
+                        el.classList.add('text-neonCyan');
+                        el.classList.remove('text-gray-300');
+                    }
+                });
+
+                this.currentTab = tabId;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            toggleMobileMenu() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            }
+
+            toggleLang() {
+                alert("සිංහල භාෂාව සක්‍රීය කරන ලදී (Sinhala mode active).");
+            }
+
+            async fetchTMDB(endpoint) {
+                try {
+                    const res = await fetch(`${TMDB_BASE}${endpoint}?api_key=${TMDB_API_KEY}`);
+                    const data = await res.json();
+                    return data.results || [];
+                } catch(e) {
+                    console.error("TMDB Fetch Error:", e);
+                    return [];
+                }
+            }
+
+            async loadHomeData() {
+                const trending = await this.fetchTMDB('/trending/movie/day');
+                const popular = await this.fetchTMDB('/movie/popular');
+                const topRated = await this.fetchTMDB('/movie/top_rated');
+                const anime = await this.fetchTMDB('/discover/movie');
+
+                if(trending.length > 0) {
+                    const hero = trending[0];
+                    document.getElementById('hero-title').innerText = hero.title || hero.name || 'CINEVERSE X';
+                    document.getElementById('hero-overview').innerText = hero.overview || 'Explore movies with Sinhala subtitles.';
+                    document.getElementById('hero-rating').innerText = hero.vote_average ? hero.vote_average.toFixed(1) : '8.5';
+                    document.getElementById('hero-year').innerText = (hero.release_date || '').substring(0, 4) || '2026';
+                    if(hero.backdrop_path) {
+                        document.getElementById('hero-bg').src = `https://image.tmdb.org/t/p/original${hero.backdrop_path}`;
+                    }
+                }
+
+                this.renderMovieGrid('trending-grid', trending.slice(0, 10));
+                this.renderMovieGrid('popular-grid', popular.slice(0, 10));
+                this.renderMovieGrid('top-rated-grid', topRated.slice(0, 10));
+                this.renderMovieGrid('anime-grid', anime.slice(0, 10));
+            }
+
+            renderMovieGrid(elementId, movies) {
+                const container = document.getElementById(elementId);
+                if (!container) return;
+                container.innerHTML = movies.map(movie => {
+                    const title = movie.title || movie.name || 'Untitled';
+                    const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://image.tmdb.org/t/p/w500/bKxiLgSV4YIs6XW58bN60r1bUaE.jpg';
+                    const year = (movie.release_date || movie.first_air_date || '').substring(0, 4) || '2026';
+                    const cleanTitle = title.replace(/'/g, "\\'");
+                    return `
+                    <div onclick="app.openDownloadSelector('${cleanTitle}')" class="group cursor-pointer glass-panel rounded-2xl overflow-hidden border border-neonCyan/20 hover:border-neonCyan transition duration-300 hover:scale-105">
+                        <div class="relative aspect-[2/3] overflow-hidden bg-gray-900">
+                            <img src="${poster}" alt="${title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-pureBlack via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3">
+                                <span class="px-2.5 py-1 rounded-lg bg-neonCyan text-pureBlack font-bold text-xs flex items-center gap-1">
+                                    <i data-lucide="download" class="w-3 h-3"></i> Download Hubs
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-3 space-y-1">
+                            <h4 class="text-sm font-bold text-white truncate">${title}</h4>
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>${year}</span>
+                                <span class="text-neonCyan font-semibold">Sinhala Sub</span>
+                            </div>
+                        </div>
+                    </div>
+                `;}).join('');
+                lucide.createIcons();
+            }
+
+            async searchTMDBAPI(page = 1, append = false) {
+                const query = document.getElementById('cinesubz-search-input').value.trim();
+                const container = document.getElementById('cinesubz-results-grid');
+                const loadMoreBtn = document.getElementById('load-more-container');
+                
+                if(!query) {
+                    alert("Please enter a search query.");
+                    return;
+                }
+
+                if(!append) {
+                    this.searchQuery = query;
+                    this.searchPage = 1;
+                    this.searchResultsCache = [];
+                    loadMoreBtn.classList.add('hidden');
+
+                    // 1 to 100 Cyberpunk Loading Animation Screen
+                    container.innerHTML = `
+                        <div class="col-span-full flex flex-col items-center justify-center py-24 space-y-6">
+                            <div class="w-24 h-24 rounded-full border-4 border-neonCyan/20 border-t-neonCyan animate-spin flex items-center justify-center glow-cyan">
+                                <i data-lucide="sparkles" class="w-8 h-8 text-neonCyan animate-pulse"></i>
+                            </div>
+                            <div class="text-center space-y-2">
+                                <h3 class="text-xl font-black text-neonCyan tracking-wider">CINEVERSE SYSTEM LOADING</h3>
+                                <p class="text-3xl font-extrabold text-white"><span id="load-counter">1</span>%</p>
+                                <p class="text-xs text-gray-400">Synchronizing database & fetching movies...</p>
+                            </div>
+                        </div>
+                    `;
+                    lucide.createIcons();
+
+                    // Animate counter from 1 to 100 quickly
+                    await new Promise(resolve => {
+                        let count = 1;
+                        const counterEl = document.getElementById('load-counter');
+                        const interval = setInterval(() => {
+                            count += Math.floor(Math.random() * 8) + 5;
+                            if(count >= 100) {
+                                count = 100;
+                                clearInterval(interval);
+                                resolve();
+                            }
+                            if(counterEl) counterEl.innerText = count;
+                        }, 40);
+                    });
+                }
+
+                try {
+                    const res = await fetch(`${TMDB_BASE}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&page=${page}`);
+                    const data = await res.json();
+                    const results = data.results || [];
+
+                    if(results.length === 0 && !append) {
+                        container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400">No results found for "${query}".</div>`;
+                        return;
+                    }
+
+                    this.searchResultsCache = append ? [...this.searchResultsCache, ...results] : results;
+                    const displayList = this.searchResultsCache.slice(0, 100);
+
+                    container.innerHTML = displayList.map(movie => {
+                        const title = (movie.title || '').replace(/'/g, "\\'");
+                        const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://image.tmdb.org/t/p/w500/bKxiLgSV4YIs6XW58bN60r1bUaE.jpg';
+                        const year = (movie.release_date || '').substring(0, 4) || '';
+                        return `
+                        <div onclick="app.openDownloadSelector('${title}')" class="group cursor-pointer glass-panel rounded-2xl overflow-hidden border border-neonCyan/20 hover:border-neonCyan transition duration-300 hover:scale-105">
+                            <div class="relative aspect-[2/3] overflow-hidden bg-gray-900">
+                                <img src="${poster}" alt="${movie.title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-pureBlack via-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-3">
+                                    <span class="px-2.5 py-1 rounded-lg bg-neonCyan text-pureBlack font-bold text-xs flex items-center gap-1">
+                                        <i data-lucide="download" class="w-3 h-3"></i> Download Hubs
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-3 space-y-1">
+                                <h4 class="text-sm font-bold text-white truncate">${movie.title}</h4>
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <span>${year}</span>
+                                    <span class="text-neonCyan font-semibold">Sinhala Sub</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;}).join('');
+
+                    lucide.createIcons();
+
+                    if(this.searchResultsCache.length < 100 && page < data.total_pages && page < 5) {
+                        loadMoreBtn.classList.remove('hidden');
+                    } else {
+                        loadMoreBtn.classList.add('hidden');
+                    }
+
+                } catch(err) {
+                    container.innerHTML = `<div class="col-span-full text-center py-12 text-red-400">Error connecting to TMDB API.</div>`;
+                }
+            }
+
+            loadMoreSearchResults() {
+                if(this.searchPage < 5) {
+                    this.searchPage++;
+                    this.searchTMDBAPI(this.searchPage, true);
+                }
+            }
+
+            openDownloadSelector(title) {
+                const modal = document.getElementById('download-modal');
+                const titleEl = document.getElementById('modal-movie-title');
+                const container = document.getElementById('cinesubz-download-container');
+
+                titleEl.innerText = title;
+                modal.classList.remove('hidden');
+
+                const hubs = [
+                    { name: "Cinesubz", url: `https://cinesubz.co/?s=${encodeURIComponent(title)}`, icon: "download" },
+                    { name: "Cineru LK", url: `https://cineru.lk/?s=${encodeURIComponent(title)}`, icon: "clapperboard" },
+                    { name: "LKSubs", url: `https://www.lksubs.com/?s=${encodeURIComponent(title)}`, icon: "film" },
+                    { name: "Pupil Video", url: `https://pupilvideo.blogspot.com/search?q=${encodeURIComponent(title)}`, icon: "video" },
+                    { name: "Dinka Movies LK", url: `https://www.dinkamovieslk.app/?q=${encodeURIComponent(title)}`, icon: "tv" },
+                    { name: "Baiscope Watch", url: `https://baiscopewatch.com/?s=${encodeURIComponent(title)}`, icon: "globe" },
+                    { name: "Pirate LK", url: `https://piratelk.com/?s=${encodeURIComponent(title)}`, icon: "shield" },
+                    { name: "Subz LK", url: `https://subzlk.com/?s=${encodeURIComponent(title)}`, icon: "play-circle" },
+                    { name: "Dub LK", url: `https://dublk.com/?s=${encodeURIComponent(title)}`, icon: "mic" },
+                    { name: "Sinhala Sub LK", url: `https://sinhalasub.lk/?s=${encodeURIComponent(title)}`, icon: "file-text" }
+                ];
+
+                container.innerHTML = `
+                    <p class="text-xs text-gray-300 text-center mb-2">Select a Sinhala Subtitle Hub to search for <strong>"${title}"</strong>:</p>
+                    <div class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1">
+                        ${hubs.map(hub => `
+                            <a href="${hub.url}" target="_blank" class="flex items-center justify-between p-3.5 rounded-xl glass-panel border border-neonCyan/30 hover:border-neonCyan hover:bg-neonCyan/10 transition group">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-lg bg-neonCyan/20 flex items-center justify-center text-neonCyan group-hover:glow-cyan transition">
+                                        <i data-lucide="${hub.icon}" class="w-4 h-4"></i>
+                                    </div>
+                                    <span class="text-sm font-bold text-white group-hover:text-neonCyan transition">${hub.name}</span>
+                                </div>
+                                <span class="px-3 py-1.5 rounded-lg bg-neonCyan text-pureBlack text-xs font-bold flex items-center gap-1">
+                                    Search Hub <i data-lucide="external-link" class="w-3 h-3"></i>
+                                </span>
+                            </a>
+                        `).join('')}
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+
+            closeDownloadSelector() {
+                document.getElementById('download-modal').classList.add('hidden');
+            }
+
+            async handleAiSubmit() {
+                const input = document.getElementById('ai-input');
+                const chatBox = document.getElementById('ai-chat-box');
+                const prompt = input.value.trim();
+                if(!prompt) return;
+
+                chatBox.innerHTML += `
+                    <div class="flex items-end justify-end space-x-3">
+                        <div class="p-4 rounded-2xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack max-w-lg text-sm font-semibold">
+                            ${prompt}
+                        </div>
+                    </div>
+                `;
+                input.value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                setTimeout(() => {
+                    let aiReply = "🧠 **CINE AI**: I recommend searching for top sci-fi or action movies in our TMDB Search tab for Sinhala subtitles!";
+                    chatBox.innerHTML += `
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-neonCyan/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i>
+                            </div>
+                            <div class="p-4 rounded-2xl glass-panel max-w-lg text-sm text-gray-200 border border-neonCyan/20">
+                                ${aiReply}
+                            </div>
+                        </div>
+                    `;
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                    lucide.createIcons();
+                }, 800);
+            }
+
+            sendAiPrompt(text) {
+                document.getElementById('ai-input').value = text;
+                this.handleAiSubmit();
+            }
+
+            openAuthModal() {
+                document.getElementById('auth-modal').classList.remove('hidden');
+            }
+
+            closeAuthModal() {
+                document.getElementById('auth-modal').classList.add('hidden');
+            }
+
+            handleAuth() {
+                const email = document.getElementById('auth-email').value;
+                if(!email) { alert("Please enter a valid email."); return; }
+                this.user = { email };
+                localStorage.setItem('cineverse_user', JSON.stringify(this.user));
+                this.updateAuthUI();
+                this.closeAuthModal();
+                alert(`Successfully signed in as ${email}!`);
+            }
+
+            updateAuthUI() {
+                const btnText = document.getElementById('auth-btn-text');
+                if(this.user) {
+                    btnText.innerText = this.user.email.split('@')[0];
+                }
+            }
+
+            renderWatchlist() {}
+        }
+
+        const app = new CineverseApp();
+    </script>
+</body>
+</html>
