@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINEVERSE X | Created by Oneth Rathsara</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pureBlack: '#030303',
+                        deepNavy: '#080D1A',
+                        electricBlue: '#00A8FF',
+                        neonCyan: '#00F5FF',
+                        purpleCustom: '#8B5CF6',
+                        redCustom: '#FF1744',
+                        goldCustom: '#FFD700',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons & Google Fonts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #030303;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(8, 13, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 245, 255, 0.15);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.25);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #030303; }
+        ::-webkit-scrollbar-thumb { background: #080D1A; border-radius: 3px; border: 1px solid rgba(0, 245, 255, 0.3); }
+        ::-webkit-scrollbar-thumb:hover { background: #00F5FF; }
+    </style>
+</head>
+<body class="bg-pureBlack text-white antialiased selection:bg-neonCyan selection:text-pureBlack">
+
+    <!-- 1 - 100% INTRO LOADING SCREEN -->
+    <div id="intro-loader" class="fixed inset-0 z-[100] bg-pureBlack flex flex-col items-center justify-center space-y-6">
+        <div class="w-24 h-24 rounded-full border-4 border-neonCyan/20 border-t-neonCyan animate-spin flex items-center justify-center glow-cyan">
+            <i data-lucide="play" class="w-8 h-8 text-neonCyan fill-neonCyan animate-pulse"></i>
+        </div>
+        <div class="text-center space-y-2">
+            <h2 class="text-2xl font-black tracking-widest bg-gradient-to-r from-neonCyan via-electricBlue to-white bg-clip-text text-transparent">CINEVERSE X</h2>
+            <p class="text-4xl font-black text-neonCyan"><span id="intro-counter">1</span>%</p>
+            <p class="text-xs text-gray-400 uppercase tracking-widest font-medium">Created by Oneth Rathsara</p>
+        </div>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-neonCyan/20 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo & Clean Subtitle Name -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="app.switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-electricBlue to-neonCyan flex items-center justify-center glow-cyan shrink-0">
+                    <i data-lucide="play" class="w-5 h-5 text-pureBlack fill-pureBlack"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-black tracking-wider bg-gradient-to-r from-neonCyan via-electricBlue to-white bg-clip-text text-transparent leading-tight block">CINEVERSE X</span>
+                    <span class="text-[10px] text-neonCyan/80 tracking-widest uppercase font-bold block">Created by Oneth Rathsara</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <button onclick="app.switchTab('home')" class="nav-link text-neonCyan transition hover:text-neonCyan flex items-center gap-1.5" data-target="home"><i data-lucide="film" class="w-4 h-4"></i> Home</button>
+                <button onclick="app.switchTab('search')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="search"><i data-lucide="search" class="w-4 h-4"></i> Search</button>
+                <button onclick="app.switchTab('ai')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="ai"><i data-lucide="sparkles" class="w-4 h-4 text-neonCyan"></i> CINE AI</button>
+                <button onclick="app.switchTab('profile')" class="nav-link text-gray-300 hover:text-neonCyan transition flex items-center gap-1.5" data-target="profile"><i data-lucide="user-check" class="w-4 h-4 text-neonCyan"></i> Profile</button>
+            </nav>
+
+            <!-- Right Actions (Search Button + Login Initials / Hamburger) -->
+            <div class="flex items-center space-x-3">
+                <!-- Search Button in Header -->
+                <button onclick="app.switchTab('search')" class="p-2.5 rounded-xl glass-panel border border-neonCyan/30 text-neonCyan hover:bg-neonCyan/10 transition flex items-center gap-1.5 text-xs font-bold">
+                    <i data-lucide="search" class="w-4 h-4"></i> <span class="hidden sm:inline">Search</span>
+                </button>
+
+                <!-- Login Initials Badge or Login Button -->
+                <div id="user-profile-badge" class="hidden items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-electricBlue to-neonCyan text-pureBlack font-black text-xs glow-cyan cursor-pointer" title="Logged In" onclick="app.switchTab('profile')">
+                    OR
+                </div>
+                <button id="auth-action-btn" onclick="app.handleGoogleLogin()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold text-xs flex items-center gap-1.5 hover:glow-cyan transition">
+                    <i data-lucide="log-in" class="w-4 h-4"></i> Login
+                </button>
+
+                <!-- Mobile Menu Button (Hamburger) -->
+                <button onclick="app.toggleMobileMenu()" class="md:hidden p-2 text-neonCyan glass-panel rounded-xl border border-neonCyan/30">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE MENU MODAL (Hamburger Menu) -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 bg-pureBlack/95 backdrop-blur-2xl flex flex-col justify-center items-center space-y-6 hidden md:hidden">
+        <button onclick="app.toggleMobileMenu()" class="absolute top-6 right-6 p-2 text-gray-400 hover:text-white">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <div class="text-center space-y-1 pb-4 border-b border-neonCyan/20 w-3/4">
+            <div id="mobile-user-initials" class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-electricBlue to-neonCyan text-pureBlack font-black text-lg flex items-center justify-center glow-cyan mb-2">OR</div>
+            <p id="mobile-user-email" class="text-xs text-neonCyan font-semibold">Not Logged In</p>
+        </div>
+        <button onclick="app.switchTab('home'); app.toggleMobileMenu();" class="text-lg font-bold hover:text-neonCyan flex items-center gap-2"><i data-lucide="film" class="w-5 h-5"></i> Home</button>
+        <button onclick="app.switchTab('search'); app.toggleMobileMenu();" class="text-lg font-bold hover:text-neonCyan flex items-center gap-2"><i data-lucide="search" class="w-5 h-5"></i> Search Movies</button>
+        <button onclick="app.switchTab('ai'); app.toggleMobileMenu();" class="text-lg font-bold text-neonCyan flex items-center gap-2"><i data-lucide="sparkles" class="w-5 h-5"></i> CINE AI Assistant</button>
+        <button onclick="app.switchTab('profile'); app.toggleMobileMenu();" class="text-lg font-bold text-electricBlue flex items-center gap-2"><i data-lucide="user-check" class="w-5 h-5"></i> My Profile</button>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="relative z-10 pt-24 pb-24">
+
+        <!-- ================= TAB 1: HOME ================= -->
+        <section id="tab-home" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-neonCyan"></i> Trending Movies Today
+                    </h2>
+                    <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                </div>
+                <div id="trending-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                        <i data-lucide="flame" class="w-6 h-6 text-redCustom"></i> Popular Worldwide
+                    </h2>
+                    <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                </div>
+                <div id="popular-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                        <i data-lucide="star" class="w-6 h-6 text-goldCustom"></i> Top Rated Masterpieces
+                    </h2>
+                    <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                </div>
+                <div id="top-rated-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-extrabold flex items-center gap-2.5">
+                        <i data-lucide="tv" class="w-6 h-6 text-electricBlue"></i> Anime & TV Series
+                    </h2>
+                    <button onclick="app.switchTab('search')" class="text-xs text-neonCyan hover:underline font-semibold">View All</button>
+                </div>
+                <div id="tv-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: TMDB SEARCH ================= -->
+        <section id="tab-search" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 hidden">
+            <div class="space-y-4">
+                <h1 class="text-3xl font-black bg-gradient-to-r from-neonCyan to-white bg-clip-text text-transparent">TMDB Movie Search</h1>
+                <div class="flex gap-4">
+                    <input type="text" id="cinesubz-search-input" onkeydown="if(event.key==='Enter')app.searchTMDBAPI()" placeholder="Type movie name..." class="flex-1 px-4 py-3.5 rounded-xl glass-panel border border-neonCyan/30 text-white placeholder-gray-400 focus:outline-none focus:border-neonCyan">
+                    <button onclick="app.searchTMDBAPI()" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold flex items-center gap-2">
+                        <i data-lucide="search" class="w-5 h-5"></i> Search
+                    </button>
+                </div>
+            </div>
+            <div id="cinesubz-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+        </section>
+
+        <!-- ================= TAB 3: CINE AI ================= -->
+        <section id="tab-ai" class="tab-content max-w-4xl mx-auto px-4 hidden">
+            <div class="glass-panel p-6 rounded-3xl border border-neonCyan/30 space-y-4 glow-cyan">
+                <h2 class="text-xl font-bold text-neonCyan flex items-center gap-2"><i data-lucide="sparkles" class="w-5 h-5"></i> CINE AI Assistant</h2>
+                <div id="ai-chat-box" class="h-64 overflow-y-auto space-y-3 text-sm text-gray-300">Hello! Ask me for movie recommendations.</div>
+                <div class="flex gap-2">
+                    <input type="text" id="ai-input" placeholder="Ask anything..." class="flex-1 px-4 py-3 rounded-xl glass-panel border border-neonCyan/30 text-white">
+                    <button onclick="app.handleAiSubmit()" class="px-6 py-3 rounded-xl bg-neonCyan text-pureBlack font-bold">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 4: PROFILE (ONETH RATHSARA) ================= -->
+        <section id="tab-profile" class="tab-content max-w-4xl mx-auto px-4 space-y-8 hidden">
+            <div class="glass-panel p-8 sm:p-10 rounded-3xl border border-neonCyan/40 glow-cyan space-y-6">
+                <div class="flex flex-col sm:flex-row items-center gap-6 border-b border-neonCyan/20 pb-6">
+                    <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-electricBlue to-neonCyan flex items-center justify-center text-pureBlack font-black text-3xl glow-cyan">
+                        OR
+                    </div>
+                    <div class="text-center sm:text-left space-y-1">
+                        <span class="px-3 py-1 rounded-full bg-neonCyan/10 text-neonCyan text-xs font-bold uppercase tracking-wider">Verified Developer</span>
+                        <h1 class="text-3xl font-black text-white">Oneth Rathsara</h1>
+                        <p class="text-neonCyan font-semibold text-sm">Full-Stack Web Developer & UI Engineer</p>
+                        <p class="text-gray-400 text-xs">St. Sylvester's College (ශාන්ත සිල්වෙස්තර පිරිමි විද්‍යාලය), Kandy, Sri Lanka</p>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-sm leading-relaxed">
+                    Passionate self-taught developer specializing in dark void black and neon electric blue UI designs, glassmorphism, and interactive web applications including CINEVERSE X and Cricverse.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ================= MOVIE DETAILS & STREAMING MODAL ================= -->
+    <div id="movie-detail-modal" class="fixed inset-0 z-50 bg-pureBlack/95 backdrop-blur-2xl flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="glass-panel max-w-4xl w-full rounded-3xl border border-neonCyan/40 p-6 sm:p-8 space-y-6 relative glow-cyan max-h-[95vh] overflow-y-auto">
+            <button onclick="app.closeMovieModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white z-20 p-2 rounded-full glass-panel">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Movie Backdrop & Basic Info -->
+            <div id="modal-movie-header" class="relative rounded-2xl overflow-hidden aspect-video bg-gray-900 border border-neonCyan/30 flex items-end p-6">
+                <div class="absolute inset-0">
+                    <img id="modal-backdrop" src="" class="w-full h-full object-cover filter brightness-50" alt="Backdrop">
+                    <div class="absolute inset-0 bg-gradient-to-t from-pureBlack via-pureBlack/40 to-transparent"></div>
+                </div>
+                <div class="relative z-10 space-y-2">
+                    <h2 id="modal-title" class="text-2xl sm:text-4xl font-black text-white">Movie Title</h2>
+                    <div class="flex flex-wrap items-center gap-3 text-xs">
+                        <span id="modal-rating" class="px-2.5 py-1 rounded bg-goldCustom/20 text-goldCustom font-bold">★ 8.5</span>
+                        <span id="modal-year" class="text-gray-300">2026</span>
+                        <span id="modal-genres" class="text-neonCyan font-semibold">Action, Sci-Fi</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overview & Action Buttons -->
+            <div class="space-y-4">
+                <p id="modal-overview" class="text-gray-300 text-sm leading-relaxed">Movie overview loading...</p>
+                
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <button onclick="app.playMovieStream()" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-electricBlue to-neonCyan text-pureBlack font-bold text-sm flex items-center gap-2 hover:glow-cyan transition">
+                        <i data-lucide="play" class="w-5 h-5 fill-pureBlack"></i> Watch Now
+                    </button>
+                    <button onclick="app.watchTrailer()" class="px-7 py-3.5 rounded-xl bg-purpleCustom text-white font-bold text-sm flex items-center gap-2 hover:opacity-90 transition">
+                        <i data-lucide="video" class="w-5 h-5"></i> Watch Trailer
+                    </button>
+                    <button onclick="app.toggleFavourite()" id="favourite-btn" class="px-6 py-3.5 rounded-xl glass-panel border border-neonCyan/30 text-neonCyan font-bold text-sm flex items-center gap-2 hover:bg-neonCyan/10 transition">
+                        <i data-lucide="heart" class="w-5 h-5"></i> <span id="fav-text">Favourite</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vidsrc Player Container -->
+            <div id="streaming-container" class="space-y-4 hidden pt-4 border-t border-neonCyan/20">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-neonCyan flex items-center gap-2"><i data-lucide="tv" class="w-5 h-5"></i> Vidsrc Streaming Player</h3>
+                    <select id="subtitle-lang-select" class="bg-pureBlack border border-neonCyan/30 text-neonCyan text-xs rounded-lg px-2 py-1 focus:outline-none">
+                        <option value="si">සිංහල (Sinhala)</option>
+                        <option value="en" selected>English</option>
+                    </select>
+                </div>
+                <div class="relative aspect-video w-full bg-black rounded-2xl overflow-hidden border border-neonCyan/30">
+                    <iframe id="vidsrc-iframe" src="" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- LK Sinhala Subtitle & Download Hubs Links -->
+            <div class="space-y-3 pt-4 border-t border-neonCyan/20">
+                <h3 class="text-sm font-bold text-neonCyan flex items-center gap-2"><i data-lucide="globe" class="w-4 h-4"></i> Sinhala Subtitle & Download Hubs</h3>
+                <div id="all-hubs-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const TMDB_API_KEY = '8265bd1679663a7ea12ac168da84d2e8';
+        const TMDB_BASE = 'https://api.themoviedb.org/3';
+
+        class CineverseApp {
+            constructor() {
+                this.currentMovie = null;
+                this.favourites = JSON.parse(localStorage.getItem('cineverse_favs')) || [];
+                this.user = JSON.parse(localStorage.getItem('cineverse_user')) || null;
+                this.initLoader();
+            }
+
+            initLoader() {
+                let count = 1;
+                const counterEl = document.getElementById('intro-counter');
+                const loaderEl = document.getElementById('intro-loader');
+
+                const interval = setInterval(() => {
+                    count += Math.floor(Math.random() * 8) + 4;
+                    if(count >= 100) {
+                        count = 100;
+                        clearInterval(interval);
+                        loaderEl.style.transition = "opacity 0.5s ease";
+                        loaderEl.style.opacity = "0";
+                        setTimeout(() => loaderEl.remove(), 500);
+                    }
+                    if(counterEl) counterEl.innerText = count;
+                }, 35);
+
+                lucide.createIcons();
+                this.updateAuthUI();
+                this.loadHomeData();
+            }
+
+            switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+                document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            toggleMobileMenu() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+            }
+
+            async fetchTMDB(endpoint) {
+                try {
+                    const res = await fetch(`${TMDB_BASE}${endpoint}?api_key=${TMDB_API_KEY}`);
+                    const data = await res.json();
+                    return data.results || [];
+                } catch(e) { return []; }
+            }
+
+            async loadHomeData() {
+                const trending = await this.fetchTMDB('/trending/movie/day');
+                const popular = await this.fetchTMDB('/movie/popular');
+                const topRated = await this.fetchTMDB('/movie/top_rated');
+                const tvSeries = await this.fetchTMDB('/tv/popular');
+
+                this.renderMovieGrid('trending-grid', trending.slice(0, 10));
+                this.renderMovieGrid('popular-grid', popular.slice(0, 10));
+                this.renderMovieGrid('top-rated-grid', topRated.slice(0, 10));
+                this.renderMovieGrid('tv-grid', tvSeries.slice(0, 10));
+            }
+
+            renderMovieGrid(elementId, movies) {
+                const container = document.getElementById(elementId);
+                if (!container) return;
+                container.innerHTML = movies.map(movie => {
+                    const title = movie.title || movie.name || 'Untitled';
+                    const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://image.tmdb.org/t/p/w500/bKxiLgSV4YIs6XW58bN60r1bUaE.jpg';
+                    return `
+                    <div onclick="app.openMovieModal(${movie.id})" class="group cursor-pointer glass-panel rounded-2xl overflow-hidden border border-neonCyan/20 hover:border-neonCyan transition duration-300 hover:scale-105">
+                        <div class="relative aspect-[2/3] overflow-hidden bg-gray-900">
+                            <img src="${poster}" alt="${title}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            <div class="absolute inset-0 bg-pureBlack/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                <span class="px-3 py-1.5 rounded-xl bg-neonCyan text-pureBlack font-bold text-xs flex items-center gap-1">
+                                    <i data-lucide="info" class="w-3.5 h-3.5"></i> Details
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h4 class="text-sm font-bold text-white truncate">${title}</h4>
+                            <span class="text-[10px] text-neonCyan font-semibold">Sinhala Sub / Vidsrc</span>
+                        </div>
+                    </div>
+                `;}).join('');
+                lucide.createIcons();
+            }
+
+            async searchTMDBAPI() {
+                const query = document.getElementById('cinesubz-search-input').value.trim();
+                const container = document.getElementById('cinesubz-results-grid');
+                if(!query) return;
+                const res = await fetch(`${TMDB_BASE}/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                this.renderMovieGrid('cinesubz-results-grid', data.results || []);
+            }
+
+            async openMovieModal(tmdbId) {
+                try {
+                    const res = await fetch(`${TMDB_BASE}/movie/${tmdbId}?api_key=${TMDB_API_KEY}`);
+                    const movie = await res.json();
+                    this.currentMovie = movie;
+
+                    document.getElementById('modal-title').innerText = movie.title || movie.name;
+                    document.getElementById('modal-overview').innerText = movie.overview || 'No overview available.';
+                    document.getElementById('modal-rating').innerText = `★ ${movie.vote_average ? movie.vote_average.toFixed(1) : '8.0'}`;
+                    document.getElementById('modal-year').innerText = (movie.release_date || movie.first_air_date || '').substring(0, 4) || '2026';
+                    document.getElementById('modal-genres').innerText = (movie.genres || []).map(g => g.name).join(', ') || 'Action, Drama';
+                    
+                    if(movie.backdrop_path) {
+                        document.getElementById('modal-backdrop').src = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+                    }
+
+                    document.getElementById('streaming-container').classList.add('hidden');
+                    document.getElementById('vidsrc-iframe').src = '';
+
+                    const title = movie.title || movie.name;
+                    const hubsContainer = document.getElementById('all-hubs-container');
+                    const hubs = [
+                        { name: "Cinesubz", url: `https://cinesubz.co/?s=${encodeURIComponent(title)}` },
+                        { name: "Cineru LK", url: `https://cineru.lk/?s=${encodeURIComponent(title)}` },
+                        { name: "LKSubs", url: `https://www.lksubs.com/?s=${encodeURIComponent(title)}` },
+                        { name: "Pupil Video", url: `https://pupilvideo.blogspot.com/search?q=${encodeURIComponent(title)}` },
+                        { name: "Dinka Movies", url: `https://www.dinkamovieslk.app/?q=${encodeURIComponent(title)}` },
+                        { name: "Baiscope", url: `https://baiscopewatch.com/?s=${encodeURIComponent(title)}` },
+                        { name: "Pirate LK", url: `https://piratelk.com/?s=${encodeURIComponent(title)}` },
+                        { name: "Subz LK", url: `https://subzlk.com/?s=${encodeURIComponent(title)}` },
+                        { name: "Dub LK", url: `https://dublk.com/?s=${encodeURIComponent(title)}` },
+                        { name: "Sinhala Sub LK", url: `https://sinhalasub.lk/?s=${encodeURIComponent(title)}` }
+                    ];
+
+                    hubsContainer.innerHTML = hubs.map(hub => `
+                        <a href="${hub.url}" target="_blank" class="p-2.5 rounded-xl glass-panel border border-neonCyan/30 hover:border-neonCyan text-center text-xs font-bold text-neonCyan truncate block transition hover:scale-105">
+                            ${hub.name} ↗
+                        </a>
+                    `).join('');
+
+                    this.updateFavouriteBtnUI();
+                    document.getElementById('movie-detail-modal').classList.remove('hidden');
+                    lucide.createIcons();
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+
+            playMovieStream() {
+                if(!this.currentMovie) return;
+                const streamContainer = document.getElementById('streaming-container');
+                streamContainer.classList.remove('hidden');
+                
+                const iframe = document.getElementById('vidsrc-iframe');
+                iframe.src = `https://vidsrc.mov/embed/movie/${this.currentMovie.id}`;
+                streamContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            async watchTrailer() {
+                if(!this.currentMovie) return;
+                try {
+                    const res = await fetch(`${TMDB_BASE}/movie/${this.currentMovie.id}/videos?api_key=${TMDB_API_KEY}`);
+                    const data = await res.json();
+                    const trailer = (data.results || []).find(v => v.type === 'Trailer' && v.site === 'YouTube');
+                    if(trailer) {
+                        window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+                    } else {
+                        alert("Trailer not found on YouTube for this movie.");
+                    }
+                } catch(e) {
+                    alert("Could not load trailer.");
+                }
+            }
+
+            toggleFavourite() {
+                if(!this.currentMovie) return;
+                const index = this.favourites.findIndex(m => m.id === this.currentMovie.id);
+                if(index > -1) {
+                    this.favourites.splice(index, 1);
+                } else {
+                    this.favourites.push(this.currentMovie);
+                }
+                localStorage.setItem('cineverse_favs', JSON.stringify(this.favourites));
+                this.updateFavouriteBtnUI();
+            }
+
+            updateFavouriteBtnUI() {
+                if(!this.currentMovie) return;
+                const isFav = this.favourites.some(m => m.id === this.currentMovie.id);
+                document.getElementById('fav-text').innerText = isFav ? 'Favorited' : 'Favourite';
+            }
+
+            closeMovieModal() {
+                document.getElementById('movie-detail-modal').classList.add('hidden');
+                document.getElementById('vidsrc-iframe').src = '';
+            }
+
+            handleGoogleLogin() {
+                const email = prompt("Enter your Google Account Email for CINEVERSE X Login:", "onethrathsara@gmail.com");
+                if(email) {
+                    // Extract initials or use 'OR'
+                    this.user = { email, initials: 'OR' };
+                    localStorage.setItem('cineverse_user', JSON.stringify(this.user));
+                    this.updateAuthUI();
+                    alert(`Successfully signed in as ${email}!`);
+                }
+            }
+
+            updateAuthUI() {
+                const badge = document.getElementById('user-profile-badge');
+                const authBtn = document.getElementById('auth-action-btn');
+                const mobileInitials = document.getElementById('mobile-user-initials');
+                const mobileEmail = document.getElementById('mobile-user-email');
+
+                if(this.user) {
+                    badge.classList.remove('hidden');
+                    badge.classList.add('flex');
+                    badge.innerText = this.user.initials || 'OR';
+                    
+                    if(mobileInitials) mobileInitials.innerText = this.user.initials || 'OR';
+                    if(mobileEmail) mobileEmail.innerText = this.user.email;
+
+                    authBtn.innerHTML = `<i data-lucide="log-out" class="w-4 h-4"></i> Logout`;
+                    authBtn.onclick = () => {
+                        localStorage.removeItem('cineverse_user');
+                        this.user = null;
+                        location.reload();
+                    };
+                }
+                lucide.createIcons();
+            }
+
+            handleAiSubmit() {
+                const input = document.getElementById('ai-input');
+                const chatBox = document.getElementById('ai-chat-box');
+                if(!input.value) return;
+                chatBox.innerHTML += `<p><b>You:</b> ${input.value}</p><p><b>CINE AI:</b> Great choice! Open any movie to watch it via Vidsrc or search LK Subtitle Hubs.</p>`;
+                input.value = '';
+            }
+        }
+
+        const app = new CineverseApp();
+    </script>
+</body>
+</html>
